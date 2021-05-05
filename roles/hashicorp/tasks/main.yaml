@@ -1,0 +1,8 @@
+- name: Install unzip
+  ansible.builtin.package:
+    name: unzip
+    state: present
+
+- name: Include download tasks
+  include_tasks: download.yaml
+  loop: "{{ items }}"
