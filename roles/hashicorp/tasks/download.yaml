@@ -1,20 +1,23 @@
-- name: Get version information about {{ item | title }}
+- name: Get version information about {{ item.name | title }}
   ansible.builtin.uri:
     body_format: json
-    url: "https://checkpoint-api.hashicorp.com/v1/check/{{ item }}"
+    url: "https://checkpoint-api.hashicorp.com/v1/check/{{ item.name }}"
   register: response
 
 - name: Set required variables
   set_fact:
     architecture: "{{ architectures[ansible_facts['architecture']] }}"
-    download_url: "{{ response.json.current_download_url | regex_replace('\\/$', '') }}"
     system: "{{ ansible_facts['system'] | lower }}"
-    version: "{{ response.json.current_version }}"
+    version: "{{ item.version is defined | ternary(item.version, response.json.current_version) }}"
 
-- name: Download {{ item | title }} ({{ version }})
+- name: Download {{ item.name | title }} ({{ version }})
+  ansible.builtin.get_url:
+    dest: /tmp
+    url: "https://releases.hashicorp.com/{{ item.name }}/{{ version }}/{{ item.name }}_{{ version }}_{{ system }}_{{ architecture }}.zip"
+  register: artifact
+
+- name: Install {{ item.name | title }}
   ansible.builtin.unarchive:
-    creates: "/usr/local/bin/{{ item }}"
     dest: /usr/local/bin
     mode: 0755
-    remote_src: true
-    src: "{{ download_url }}/{{ item }}_{{ version }}_{{ system }}_{{ architecture }}.zip"
+    src: "{{ artifact.dest }}"

@@ -6,3 +6,5 @@
 - name: Include download tasks
   include_tasks: download.yaml
   loop: "{{ items }}"
+  loop_control:
+    label: "{{ item.name }}"
