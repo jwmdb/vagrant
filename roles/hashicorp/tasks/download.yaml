@@ -4,10 +4,17 @@
     url: "https://checkpoint-api.hashicorp.com/v1/check/{{ item }}"
   register: response
 
-- name: Download {{ item | title }} ({{ response.json.current_version }})
+- name: Set required variables
+  set_fact:
+    architecture: "{{ architectures[ansible_facts['architecture']] }}"
+    download_url: "{{ response.json.current_download_url | regex_replace('\\/$', '') }}"
+    system: "{{ ansible_facts['system'] | lower }}"
+    version: "{{ response.json.current_version }}"
+
+- name: Download {{ item | title }} ({{ version }})
   ansible.builtin.unarchive:
     creates: "/usr/local/bin/{{ item }}"
     dest: /usr/local/bin
     mode: 0755
     remote_src: true
-    src: "{{ response.json.current_download_url.rstrip('/') }}/{{ item }}_{{ response.json.current_version }}_{{ ansible_facts['system'] | lower }}_{{ architectures[ansible_facts['architecture']] }}.zip"
+    src: "{{ download_url }}/{{ item }}_{{ version }}_{{ system }}_{{ architecture }}.zip"
