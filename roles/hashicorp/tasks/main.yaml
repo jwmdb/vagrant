@@ -3,8 +3,8 @@
     name: unzip
     state: present
 
-- name: Include download tasks
-  include_tasks: download.yaml
+- name: Include {{ system }} tasks
+  include_tasks: "{{ system }}.yaml"
   loop: "{{ items }}"
   loop_control:
     label: "{{ item.name }}"
