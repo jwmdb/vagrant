@@ -1,2 +1,5 @@
 architectures:
   x86_64: amd64
+architecture: "{{ architectures[ansible_facts['architecture']] }}"
+base_url: https://releases.hashicorp.com
+system: "{{ ansible_facts['system'] | lower }}"
