@@ -14,7 +14,9 @@
     - role: geerlingguy.pip
       vars:
         pip_install_packages:
+          - ansible-lint[yamllint]
           - docker==5.0.0
+          - pre-commit==2.12.1
     - role: geerlingguy.docker
       vars:
         docker_users:

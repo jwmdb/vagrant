@@ -1,7 +1,13 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+Vagrant.require_version ">= 2.2.16"
+
 Vagrant.configure("2") do |config|
+  config.ssh.forward_agent = true
+
+  config.vagrant.plugins = ["vagrant-share"]
+
   config.vm.box = "ubuntu/focal64"
   config.vm.box_check_update = true
 
