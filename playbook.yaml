@@ -1,8 +1,27 @@
 - gather_facts: true
   hosts: all
   roles:
+    - role: gantsign.oh-my-zsh
+      vars:
+        users:
+          - oh_my_zsh:
+              plugins:
+                - aws
+                - git
+                - helm
+              theme: robbyrussell
+            username: vagrant
+    - role: geerlingguy.pip
+      vars:
+        pip_install_packages:
+          - docker==5.0.0
+    - role: geerlingguy.docker
+      vars:
+        docker_users:
+          - vagrant
     - role: hashicorp
       vars:
         items:
           - name: packer
           - name: terraform
+    - role: andrewrothstein.kubernetes-helm

@@ -1,0 +1,7 @@
+collections:
+  - name: geerlingguy.k8s
+roles:
+  - name: andrewrothstein.kubernetes-helm
+  - name: gantsign.oh-my-zsh
+  - name: geerlingguy.docker
+  - name: geerlingguy.pip
